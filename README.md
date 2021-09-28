@@ -13,3 +13,8 @@ Add your bots token to the enironment variable "DISCORD"
 now start the bot with ```node main.js```
 
 As for now for uploading and downloading files you will have to mess with the code as it is still experimental.
+
+# future of the project
+I am currently working on creating an java app from this proof of concept.
+Maybe later also will do an android app.
+Also i plan on making use of attachement files to make the upload faster.
