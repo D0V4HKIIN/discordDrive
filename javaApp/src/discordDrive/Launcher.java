@@ -1,7 +1,7 @@
 package discordDrive;
 
 
-public class main {
+public class Launcher {
     static private String path = "/home/jonas";
 
     public static void main(String[] args) {
