@@ -1,7 +1,10 @@
 package discordDrive;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -23,7 +26,7 @@ public class DiscordExplorer extends AbstractExplorer {
 
     // TODO
     @Override
-    protected void fillTree(DefaultMutableTreeNode root, String filename) {
+    protected void fillTree(DefaultMutableTreeNode root, String filename, int depth) {
 
     }
 
@@ -38,9 +41,15 @@ public class DiscordExplorer extends AbstractExplorer {
         return null;
     }
 
+	@Override
+	protected TreeSelectionListener showContents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    protected void doMouseClicked(MouseEvent me) {
-
-    }
+	@Override
+	protected String getPath(TreePath tp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
