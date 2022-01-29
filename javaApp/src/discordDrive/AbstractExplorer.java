@@ -37,29 +37,31 @@ abstract class AbstractExplorer extends JPanel {
 		jtf = new JTextField();
 		action = createActionButton();
 
+		// initialize tree
 		File temp = new File(path);
 		DefaultMutableTreeNode top = createTree(temp);
 
 		tree = new JTree(top);
 
+		// Table with files and their size
 		jsp = new JScrollPane(tree);
 
 		jtb = new JTable(data, colHeads);
 		jspTable = new JScrollPane(jtb);
 
+		// add to layout
 		setLayout(new BorderLayout());
 		add(jtf, BorderLayout.NORTH);
 		add(jsp, BorderLayout.WEST);
 		add(jspTable, BorderLayout.CENTER);
 		add(action, BorderLayout.SOUTH);
 
+		// show content of folder when clicked
 		tree.addTreeSelectionListener(showContents());
+		// dynamically add nodes when tree gets opened
 		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
 			@Override
 			public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-				// idk what to do with this
-				// fillTree((DefaultMutableTreeNode) tree.getLastSelectedPathComponent(),
-				// getPath(event.getPath()), 0);
 				System.out.println("Expansion of the tree");
 				TreePath eventPath = event.getPath();
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) eventPath.getLastPathComponent();
