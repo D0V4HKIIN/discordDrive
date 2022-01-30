@@ -1,2 +1,2 @@
 #ignore config file with discord id's
-*.json
+config.json
