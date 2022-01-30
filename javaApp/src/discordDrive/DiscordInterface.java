@@ -9,7 +9,10 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class DiscordInterface {
 
-	public DiscordInterface(String id) {
+	public DiscordInterface() {
+		// GET ID
+
+		// BUILD BOT
 		JDABuilder builder = JDABuilder.createDefault(id);
 
 		// Disable parts of the cache
@@ -19,7 +22,7 @@ public class DiscordInterface {
 		// Disable compression (not recommended)
 		builder.setCompression(Compression.NONE);
 		// Set activity (like "playing Something")
-		builder.setActivity(Activity.watching("TV"));
+		builder.setActivity(Activity.watching("the files"));
 
 		try {
 			builder.build();
@@ -29,6 +32,6 @@ public class DiscordInterface {
 	}
 
 	public final void main(String[] args) {
-
+		DiscordInterface interface = new DiscordInterface();
 	}
 }

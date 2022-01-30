@@ -8,6 +8,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+@SuppressWarnings("serial")
 public class DiscordExplorer extends AbstractExplorer {
 	private static String ACTIONTEXT = "Download";
 

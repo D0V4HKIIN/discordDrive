@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 /***********************************/
+@SuppressWarnings("serial")
 abstract class AbstractExplorer extends JPanel {
 	// top text
 	protected JTextField pathField;
