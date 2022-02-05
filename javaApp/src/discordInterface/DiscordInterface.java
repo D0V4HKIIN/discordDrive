@@ -175,7 +175,8 @@ public class DiscordInterface {
 			builder.append(msgs.get(i).getContentDisplay());
 		}
 
-		if (msgs.size() == MAX_HISTORY - 1) {
+		if (msgs.size() == MAX_HISTORY) {
+			log("next recursive call for download");
 			downloadAfter(channel, msgs.get(0), builder, stream);
 		} else {
 			String finalData = builder.toString();
@@ -229,17 +230,19 @@ public class DiscordInterface {
 			dInterface = new DiscordInterface();
 		} catch (LoginException | InterruptedException e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 
 		// upload
-//		dInterface.upload("/home/jonas/Sync/projects/code/discordDrive/testUpload/test.exec", "/data/");
+//		dInterface.upload("/home/jonas/Sync/projects/code/discordDrive/testUpload/image.png", "/data/");
 
 		// download
 		try {
-			dInterface.download("/data/test.exec", "/home/jonas/Sync/projects/code/discordDrive/testDownload/");
+			dInterface.download("/data/image.png", "/home/jonas/Sync/projects/code/discordDrive/testDownload/");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		dInterface.jda.shutdown();
 	}
 }
