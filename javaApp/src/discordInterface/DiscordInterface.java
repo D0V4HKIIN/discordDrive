@@ -93,7 +93,7 @@ public class DiscordInterface {
 		return msgs;
 	}
 
-	public void upload(String path, String destination) {
+	public CompletableFuture upload(String path, String destination) {
 		// add filename to destination
 		String regex = "\\" + File.separator + "";
 		String[] folders = path.split(regex);
@@ -102,6 +102,8 @@ public class DiscordInterface {
 		// create channel
 		log("creating channel " + path);
 		TextChannel channel = guild.createTextChannel(destination).complete();
+
+		CompletableFuture<Message> lastMessage = null;
 
 		// send start message
 		CompletableFuture<Message> startFuture = channel.sendMessage("START").submit();
@@ -117,23 +119,25 @@ public class DiscordInterface {
 
 			for (String part : encodedString) {
 				// track upload
-				log("uploading... " + i + "/" + encodedString.length);
+				log("uploading... " + i + "/" + (encodedString.length - 1));
 				i++;
 
 				// send
-				channel.sendMessage(part).complete();
+				lastMessage = channel.sendMessage(part).submit();
 			}
 
 			// update table
 			table.sendMessage(
 					new DiscordFile(destination, channel.getIdLong(), startFuture.get().getIdLong()).toString())
 					.submit();
+
 			log(path + " uploaded");
 
 		} catch (IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 
+		return lastMessage;
 	}
 
 	public void uploadFiles(List<String> pathes, String destination) {
@@ -179,8 +183,7 @@ public class DiscordInterface {
 			log("next recursive call for download");
 			downloadAfter(channel, msgs.get(0), builder, stream);
 		} else {
-			String finalData = builder.toString();
-			System.out.println(finalData);
+			log("decoding and writing file");
 			stream.write(Base64.getDecoder().decode(builder.toString()));
 			stream.close();
 			log("finished downloading");
@@ -234,7 +237,11 @@ public class DiscordInterface {
 		}
 
 		// upload
-//		dInterface.upload("/home/jonas/Sync/projects/code/discordDrive/testUpload/image.png", "/data/");
+		try {
+			dInterface.upload("/home/jonas/Sync/projects/code/discordDrive/testUpload/image.png", "/data/").get();
+		} catch (InterruptedException | ExecutionException e1) {
+			e1.printStackTrace();
+		}
 
 		// download
 		try {
