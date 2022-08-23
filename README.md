@@ -3,7 +3,7 @@ Saves files in discord messages using a bot
 
 
 # how to setup
-write your bots token in bot_id in config.json
+write your bots token in bot_id in config.json.
 create a discord server and create 2 text channels.
 copy the discord server's id and paste it in config.json in "control_server".
 copy the channel's id that you want to use for logging and paste it in "logs_channel_id".
