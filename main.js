@@ -1,8 +1,7 @@
 const Discord = require("discord.js");
-const { Client, Intents } = Discord;
-const token = process.env.DISCORD;
-const { control_server, logs_channel_id, file_table_id } = require("./config.json");
-const client = new Client({ intents: [Intents.FLAGS.GUILD_MEMBERS] });
+const { Client, GatewayIntentBits } = Discord;
+const { bot_id, control_server, logs_channel_id, file_table_id } = require("./config.json");
+const client = new Client({ intents: [GatewayIntentBits.GuildMembers] });
 
 const fs = require("fs");
 
@@ -19,14 +18,14 @@ client.on("ready", async () => {
 	);
 
 	//upload("./image.png");
-	//uploadFolder("./");
+	uploadFolder("./testUpload");
 	downloadAll();
 });
 
 function uploadFolder(folder_path) {
 	let files = fs.readdirSync(folder_path);
 	files.forEach(file => {
-		upload(file);
+		upload(folder_path + "/" + file);
 	});
 }
 
@@ -39,7 +38,7 @@ async function upload(file_path) {
 			// create channel
 			log("creating channel " + file_path);
 			let file_channel;
-			await discord.main_guild.channels.create(file_path)
+			await discord.main_guild.channels.create({ name: file_path })
 				.then(channel => file_channel = channel);
 
 			// send first message
@@ -79,14 +78,13 @@ function downloadAll() {
 			// download file
 			log("fetched files");
 			let file = JSON.parse(message.content);
-
 			// get channel
 			client.channels.fetch(file.channel)
 				.then(async channel => {
 					log("downloading " + file.path);
 
 					if (fs.existsSync(file.path)) {
-						let folder = "./backup" + Math.floor(Date.now()/10000);
+						let folder = "./backup" + Math.floor(Date.now() / 10000);
 						fs.mkdir(folder, err => {
 							fs.renameSync(file.path, folder + "/" + file.path);
 							downloadAfter(file.entry, channel, file);
@@ -132,4 +130,4 @@ async function fetchChannel(id, name) {
 	});
 }
 
-client.login(token);
+client.login(bot_id);
