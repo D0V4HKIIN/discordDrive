@@ -18,7 +18,7 @@ client.on("ready", async () => {
 	);
 
 	//upload("./image.png");
-	uploadFolder("./testUpload");
+	//uploadFolder("./testUpload");
 	downloadAll();
 });
 
@@ -83,6 +83,9 @@ function downloadAll() {
 				.then(async channel => {
 					log("downloading " + file.path);
 
+					downloadAfter(file.entry, channel, file);
+
+					/*
 					if (fs.existsSync(file.path)) {
 						let folder = "./backup" + Math.floor(Date.now() / 10000);
 						fs.mkdir(folder, err => {
@@ -92,6 +95,7 @@ function downloadAll() {
 					} else {
 						downloadAfter(file.entry, channel, file);
 					}
+					*/
 				});
 		}));
 }
