@@ -1,2 +1,3 @@
 #ignore config file with discord id's
 config.json
+node_modules
