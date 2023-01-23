@@ -2,7 +2,7 @@ package discordDrive;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
-
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,6 +12,8 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+
+import discordInterface.DiscordInterface;
 
 /***********************************/
 @SuppressWarnings("serial")
@@ -26,11 +28,14 @@ abstract class AbstractExplorer extends JPanel {
 	protected JTable jtb;
 	protected JScrollPane jsp;
 	protected JScrollPane jspTable;
+	
+	protected DiscordInterface dInterface;
 
 	protected final String[] colHeads = { "File Name", "SIZE(in Bytes)" };
 	String[][] data = { { "", "" } };
 
-	public AbstractExplorer(String path) {
+	public AbstractExplorer(String path, DiscordInterface dInterface) {
+		this.dInterface = dInterface;
 		pathField = new JTextField();
 		action = createActionButton();
 
@@ -54,6 +59,8 @@ abstract class AbstractExplorer extends JPanel {
 		add(jspTable, BorderLayout.CENTER);
 		add(jsp, BorderLayout.WEST);
 		add(action, BorderLayout.SOUTH);
+		
+		action.addActionListener(getButtonListener());
 
 		pathField.addActionListener(getRefreshListener());
 
@@ -64,6 +71,8 @@ abstract class AbstractExplorer extends JPanel {
 	protected abstract void showFiles(String path);
 
 	protected abstract String getPath(TreePath tp);
+	protected abstract String getFolderPath();
+	protected abstract List<String> getFilePaths();
 
 	protected abstract JTree createJTree(DefaultMutableTreeNode top);
 
@@ -76,4 +85,6 @@ abstract class AbstractExplorer extends JPanel {
 	protected abstract TreeSelectionListener showContents();
 
 	protected abstract ActionListener getRefreshListener();
+	
+	protected abstract ActionListener getButtonListener();
 }

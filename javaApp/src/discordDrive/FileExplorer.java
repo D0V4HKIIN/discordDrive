@@ -3,9 +3,10 @@ package discordDrive;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
-
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -17,14 +18,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
+import discordInterface.DiscordInterface;
+
 @SuppressWarnings("serial")
 public class FileExplorer extends AbstractExplorer {
-	private static String ACTIONTEXT = "Upload";
-
-	public FileExplorer(String path) {
-		super(path);
-
+	public FileExplorer(String path, DiscordInterface dInterface) {
+		super(path, dInterface);
 	}
+
+	private static String ACTIONTEXT = "Upload";
 
 	public DefaultMutableTreeNode createTree(String path) throws Exception {
 		// initialize tree
@@ -44,8 +46,6 @@ public class FileExplorer extends AbstractExplorer {
 		if (depth == 2) {
 			return;
 		}
-
-		System.out.println("filling " + filename);
 
 		File temp = new File(filename);
 
@@ -100,14 +100,25 @@ public class FileExplorer extends AbstractExplorer {
 	public ActionListener getRefreshListener() {
 		return new RefreshListener();
 	}
+	
+
+	@Override
+	protected ActionListener getButtonListener() {
+		return new ButtonListener();
+	}
+	
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			dInterface.uploadFiles(getFilePaths(), "/data/");
+		}
+	}
 
 	private class RefreshListener implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
-			System.out.println("refreshed");
 
 			DefaultMutableTreeNode newTop = null;
 			try {
-				newTop = createTree(pathField.getText());
+				newTop = createTree(getFolderPath());
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("You probably entered the path wrong.");
@@ -116,7 +127,7 @@ public class FileExplorer extends AbstractExplorer {
 			if (newTop != null)
 				tree = new JTree(newTop);
 			jsp.setViewportView(tree);
-			showFiles(pathField.getText());
+			showFiles(getFolderPath());
 		}
 	}
 
@@ -124,7 +135,6 @@ public class FileExplorer extends AbstractExplorer {
 	protected TreeSelectionListener showContents() {
 		return new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
-				System.out.println("showing file");
 				TreePath tp = e.getPath();
 				if (tp == null)
 					return;
@@ -143,6 +153,20 @@ public class FileExplorer extends AbstractExplorer {
 		s = s.replace("]", "");
 		s = s.replace(", ", File.separator);
 		return s;
+	}
+	
+	@Override
+	protected String getFolderPath() {
+		return pathField.getText();
+	}
+	
+	@Override
+	protected List<String> getFilePaths() {
+		List<String> files = new ArrayList<String>();
+		for (int index: jtb.getSelectedRows()){
+			files.add(getFolderPath() + "/" + (String) jtb.getValueAt(index, 0));
+		}
+		return files;
 	}
 
 	@Override

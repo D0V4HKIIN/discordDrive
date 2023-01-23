@@ -21,9 +21,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -85,7 +86,7 @@ public class DiscordInterface {
 		logs.sendMessage(message).submit();
 	}
 
-	private List<Message> getAllMessagesInChannel(MessageChannel channel) {
+	private List<Message> getAllMessagesInChannel(TextChannel channel) {
 
 		List<Message> msgs = new ArrayList<Message>();
 		msgs.addAll(channel.getHistory().retrievePast(MAX_HISTORY).complete());
@@ -93,7 +94,7 @@ public class DiscordInterface {
 		return msgs;
 	}
 
-	public CompletableFuture upload(String path, String destination) {
+	public CompletableFuture<Message> upload(String path, String destination) {
 		// add filename to destination
 		String regex = "\\" + File.separator + "";
 		String[] folders = path.split(regex);
@@ -164,14 +165,14 @@ public class DiscordInterface {
 		}
 
 		DiscordFile file = getFile(path);
-		MessageChannel chan = guild.getTextChannelById(file.getChannel());
+		TextChannel chan = guild.getTextChannelById(file.getChannel());
 		Message entryMsg = chan.retrieveMessageById(file.getEntry()).complete();
 
 		downloadAfter(chan, entryMsg, new StringBuilder(), new FileOutputStream(destination));
 	}
 
 	// destination here also contains the files name
-	private void downloadAfter(MessageChannel channel, Message lastMessage, StringBuilder builder,
+	private void downloadAfter(TextChannel channel, Message lastMessage, StringBuilder builder,
 			FileOutputStream stream) throws IOException {
 		List<Message> msgs = channel.getHistoryAfter(lastMessage, MAX_HISTORY).complete().getRetrievedHistory();
 
@@ -226,8 +227,30 @@ public class DiscordInterface {
 
 		return files;
 	}
+	
+	// only for debug
+	public void resetServer() {
+		System.out.println("resetting server");
+		List<RestAction<Void>> actions = new ArrayList<RestAction<Void>>();
+		for(Channel channel: guild.getChannels()) {
+			if(!channel.equals(logs) && !channel.equals(table)) {
+				actions.add(channel.delete());
+			}
+		}
+		for(Message msg: getAllMessagesInChannel(table)) {
+			actions.add(msg.delete());
+		}
+		for(Message msg: getAllMessagesInChannel(logs)) {
+			actions.add(msg.delete());
+		}
+		for(RestAction<Void> action: actions) {
+			action.complete();
+		}
+		System.out.println("server reset");
+	}
 
 	public static void main(String[] args) {
+		System.out.println("starting discord interface debug");
 		DiscordInterface dInterface = null;
 		try {
 			dInterface = new DiscordInterface();
@@ -238,14 +261,14 @@ public class DiscordInterface {
 
 		// upload
 		try {
-			dInterface.upload("/home/jonas/Sync/projects/code/discordDrive/testUpload/image.png", "/data/").get();
+			dInterface.upload("/home/jonas/eclipse-workspace/discordDrive/test_files/test.txt", "/data/").get();
 		} catch (InterruptedException | ExecutionException e1) {
 			e1.printStackTrace();
 		}
 
 		// download
 		try {
-			dInterface.download("/data/image.png", "/home/jonas/Sync/projects/code/discordDrive/testDownload/");
+			dInterface.download("/data//data/.dir_colors", "/home/jonas/eclipse-workspace/discordDrive/test_download/");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

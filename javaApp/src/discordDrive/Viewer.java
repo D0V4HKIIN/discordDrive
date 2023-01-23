@@ -8,20 +8,22 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
+import discordInterface.DiscordInterface;
+
 public class Viewer {
 	private JFrame frame = new JFrame("DiscordDrive");
 	private FileExplorer local;
 	private DiscordExplorer cloud;
 
-	public Viewer(String path) {
+	public Viewer(String path, DiscordInterface dInterface) {
 		frame.setLayout(new GridLayout());
 		// local files
-		local = new FileExplorer(path);
+		local = new FileExplorer(path, dInterface);
 		local.showFiles(path);
 		frame.add(local, BorderLayout.WEST);
 
 		// cloud files
-		cloud = new DiscordExplorer("/");
+		cloud = new DiscordExplorer("/", dInterface);
 		cloud.showFiles("/home");
 		frame.add((Component) cloud, BorderLayout.EAST);
 

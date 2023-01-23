@@ -1,20 +1,22 @@
 package discordDrive;
 
 import java.awt.event.ActionListener;
-
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import discordInterface.DiscordInterface;
+
 @SuppressWarnings("serial")
 public class DiscordExplorer extends AbstractExplorer {
 	private static String ACTIONTEXT = "Download";
 
 	// TODO
-	public DiscordExplorer(String path) {
-		super(path);
+	public DiscordExplorer(String path, DiscordInterface dInterface) {
+		super(path, dInterface);
 	}
 
 	// TODO
@@ -61,6 +63,24 @@ public class DiscordExplorer extends AbstractExplorer {
 
 	@Override
 	protected JTree createJTree(DefaultMutableTreeNode top) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ActionListener getButtonListener() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getFolderPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<String> getFilePaths() {
 		// TODO Auto-generated method stub
 		return null;
 	}
