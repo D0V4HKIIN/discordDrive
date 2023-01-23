@@ -84,4 +84,10 @@ public class DiscordExplorer extends AbstractExplorer {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected String[][] getFilesData(String path) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
