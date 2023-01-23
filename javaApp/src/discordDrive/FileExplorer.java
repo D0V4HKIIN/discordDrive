@@ -213,7 +213,6 @@ public class FileExplorer extends AbstractExplorer {
 		jTree.addTreeWillExpandListener(new TreeWillExpandListener() {
 			@Override
 			public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-				System.out.println("Expansion of the tree");
 				TreePath eventPath = event.getPath();
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) eventPath.getLastPathComponent();
 				node.removeAllChildren();
