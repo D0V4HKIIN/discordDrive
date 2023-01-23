@@ -5,7 +5,7 @@ import javax.security.auth.login.LoginException;
 import discordInterface.DiscordInterface;
 
 public class Launcher {
-	static private String path = "/home/jonas/";
+	static private String path = System.getenv("HOME");
 
 	public static void main(String[] args) throws LoginException, InterruptedException {
 		DiscordInterface dInterface = new DiscordInterface();

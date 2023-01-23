@@ -231,20 +231,20 @@ public class DiscordInterface {
 	// only for debug
 	public void resetServer() {
 		System.out.println("resetting server");
-		List<RestAction<Void>> actions = new ArrayList<RestAction<Void>>();
+		List<CompletableFuture<?>> actions = new ArrayList<CompletableFuture<?>>();
 		for(Channel channel: guild.getChannels()) {
 			if(!channel.equals(logs) && !channel.equals(table)) {
-				actions.add(channel.delete());
+				actions.add(channel.delete().submit());
 			}
 		}
 		for(Message msg: getAllMessagesInChannel(table)) {
-			actions.add(msg.delete());
+			actions.add(msg.delete().submit());
 		}
 		for(Message msg: getAllMessagesInChannel(logs)) {
-			actions.add(msg.delete());
+			actions.add(msg.delete().submit());
 		}
-		for(RestAction<Void> action: actions) {
-			action.complete();
+		for(CompletableFuture<?> action: actions) {
+			action.join();
 		}
 		System.out.println("server reset");
 	}
